@@ -3,6 +3,7 @@ package com.lagou.edu.dao.impl;
 
 import com.lagou.edu.dao.AccountDao;
 import com.lagou.edu.pojo.Account;
+import com.lagou.edu.utils.ConnectionUtils;
 import com.lagou.edu.utils.DruidUtils;
 
 import java.sql.Connection;
@@ -15,7 +16,9 @@ import java.sql.ResultSet;
 public class JdbcAccountDaoImpl implements AccountDao {
     @Override
     public Account queryAccountByCardNo(String cardNo) throws Exception { //从连接池获取连接
-        Connection con = DruidUtils.getInstance().getConnection();
+        //Connection con = DruidUtils.getInstance().getConnection();
+        // 从当前线程中获取绑定的connection链接
+        Connection con = ConnectionUtils.getInstance().getCurrentThreadConnection();
         String sql = "select * from account where cardNo=?";
         PreparedStatement preparedStatement = con.prepareStatement(sql);
         preparedStatement.setString(1, cardNo);
@@ -28,21 +31,22 @@ public class JdbcAccountDaoImpl implements AccountDao {
         }
         resultSet.close();
         preparedStatement.close();
-        con.close();
+        //con.close();
         return account;
     }
 
     @Override
     public int updateAccountByCardNo(Account account) throws Exception {
         //从连接池获取连接
-        Connection con = DruidUtils.getInstance().getConnection();
+        //Connection con = DruidUtils.getInstance().getConnection();
+        Connection con = ConnectionUtils.getInstance().getCurrentThreadConnection();
         String sql = "update account set money=? where cardNo=?";
         PreparedStatement preparedStatement = con.prepareStatement(sql);
         preparedStatement.setInt(1, account.getMoney());
         preparedStatement.setString(2, account.getCardNo());
         int i = preparedStatement.executeUpdate();
         preparedStatement.close();
-        con.close();
+        //con.close();
         return i;
     }
 }
