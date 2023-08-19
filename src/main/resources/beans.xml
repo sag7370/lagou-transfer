@@ -1,4 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" ?>
+<!--根标签beans，里边配置的是bean子标签，每个子标签都代表一个类的配置-->
 <beans>
-    <component-scan base-package="com.lagou.edu"></component-scan>
+    <!--ID标识对象，class是类的全限定类名-->
+    <bean id="accountDao" class="com.lagou.edu.dao.impl.JdbcAccountDaoImpl">
+    </bean>
+    <bean id="transferService" class="com.lagou.edu.service.impl.TransferServiceImpl">
+        <!--set + name 之后锁定到传值的set方法了，通过反射技术可以调用该方法传入对应的值-->
+        <property name="AccountDao" ref="accountDao"></property>
+    </bean>
 </beans>
