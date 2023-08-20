@@ -1,7 +1,7 @@
 # 创建数据库
 create database bank;
 # 创建表结构
-CREATE TABLE `account`
+CREATE TABLE bank.`account`
 (
     `name`   varchar(255) COLLATE utf8mb4_bin DEFAULT NULL COMMENT '用户名',
     `money`  int(255)                         DEFAULT NULL COMMENT '账户金额',
