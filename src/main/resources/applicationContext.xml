@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+       http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--ID标识对象，class是类的全限定类名-->
+    <bean id="accountDao" class="com.lagou.edu.dao.impl.JdbcAccountDaoImpl">
+        <property name="ConnectionUtils" ref="connectionUtils"></property>
+    </bean>
+    <bean id="transferService" class="com.lagou.edu.service.impl.TransferServiceImpl">
+        <!--set + name 之后锁定到传值的set方法了，通过反射技术可以调用该方法传入对应的值-->
+        <property name="AccountDao" ref="accountDao"></property>
+    </bean>
+
+    <bean id="connectionUtils" class="com.lagou.edu.utils.ConnectionUtils">
+
+    </bean>
+    <!--事务管理器-->
+    <bean id="transactionManager" class="com.lagou.edu.utils.TransactionManager">
+        <property name="ConnectionUtils" ref="connectionUtils"></property>
+    </bean>
+    <!--代理工厂-->
+    <bean id="proxyFactory" class="com.lagou.edu.others.ProxyFactory">
+        <property name="TransactionManager" ref="transactionManager"></property>
+    </bean>
+</beans>

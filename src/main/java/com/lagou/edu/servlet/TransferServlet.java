@@ -1,11 +1,12 @@
 
 package com.lagou.edu.servlet;
 
-import com.lagou.edu.factory.BeanFactory;
 import com.lagou.edu.others.ProxyFactory;
 import com.lagou.edu.pojo.Result;
 import com.lagou.edu.service.TransferService;
 import com.lagou.edu.utils.JsonUtils;
+import org.springframework.web.context.WebApplicationContext;
+import org.springframework.web.context.support.WebApplicationContextUtils;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
@@ -26,8 +27,16 @@ public class TransferServlet extends HttpServlet {
      **/
     // 获取代理对象
     //private TransferService transferService = (TransferService) ProxyFactory.getInstance().getJdkProxy(BeanFactory.getBean("transferService"));
-    private ProxyFactory proxyFactory = (ProxyFactory) BeanFactory.getBean("proxyFactory");
-    private TransferService transferService = (TransferService) proxyFactory.getCglibProxy(BeanFactory.getBean("transferService"));
+    //private ProxyFactory proxyFactory = (ProxyFactory) BeanFactory.getBean("proxyFactory");
+    //private TransferService transferService = (TransferService) proxyFactory.getCglibProxy(BeanFactory.getBean("transferService"));
+    private TransferService transferService;
+
+    @Override
+    public void init() throws ServletException {
+        WebApplicationContext webApplicationContext = WebApplicationContextUtils.getRequiredWebApplicationContext(this.getServletContext());
+        ProxyFactory proxyFactory = (ProxyFactory) webApplicationContext.getBean("proxyFactory");
+        transferService = (TransferService) proxyFactory.getJdkProxy(webApplicationContext.getBean("transferService"));
+    }
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
