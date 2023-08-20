@@ -20,15 +20,12 @@ import java.sql.SQLException;
  */
 public class TransactionManager {
 
-    private TransactionManager() {
+    private ConnectionUtils connectionUtils;
 
+    public void setConnectionUtils(ConnectionUtils connectionUtils) {
+        this.connectionUtils = connectionUtils;
     }
 
-    private static TransactionManager transactionManager = new TransactionManager();
-
-    public static TransactionManager getInstance() {
-        return transactionManager;
-    }
 
     /**
      * 开启事务控制
@@ -36,7 +33,7 @@ public class TransactionManager {
      * @throws SQLException
      */
     public void beginTransaction() throws SQLException {
-        ConnectionUtils.getInstance().getCurrentThreadConnection().setAutoCommit(false);
+        connectionUtils.getCurrentThreadConnection().setAutoCommit(false);
     }
 
     /**
@@ -44,7 +41,7 @@ public class TransactionManager {
      * @throws SQLException
      */
     public void commit() throws SQLException {
-        ConnectionUtils.getInstance().getCurrentThreadConnection().commit();
+        connectionUtils.getCurrentThreadConnection().commit();
     }
 
     /**
@@ -52,6 +49,6 @@ public class TransactionManager {
      * @throws SQLException
      */
     public void rollback() throws SQLException {
-        ConnectionUtils.getInstance().getCurrentThreadConnection().rollback();
+        connectionUtils.getCurrentThreadConnection().rollback();
     }
 }

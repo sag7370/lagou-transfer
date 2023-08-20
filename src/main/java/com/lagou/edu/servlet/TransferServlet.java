@@ -26,7 +26,8 @@ public class TransferServlet extends HttpServlet {
      **/
     // 获取代理对象
     //private TransferService transferService = (TransferService) ProxyFactory.getInstance().getJdkProxy(BeanFactory.getBean("transferService"));
-    private TransferService transferService = (TransferService) ProxyFactory.getInstance().getCglibProxy(BeanFactory.getBean("transferService"));
+    private ProxyFactory proxyFactory = (ProxyFactory) BeanFactory.getBean("proxyFactory");
+    private TransferService transferService = (TransferService) proxyFactory.getCglibProxy(BeanFactory.getBean("transferService"));
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)

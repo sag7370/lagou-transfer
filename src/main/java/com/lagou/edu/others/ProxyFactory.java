@@ -26,15 +26,12 @@ import java.lang.reflect.Proxy;
  */
 public class ProxyFactory {
 
-    private ProxyFactory() {
+    private TransactionManager transactionManager;
 
+    public void setTransactionManager(TransactionManager transactionManager) {
+        this.transactionManager = transactionManager;
     }
 
-    private static ProxyFactory proxyFactory = new ProxyFactory();
-
-    public static ProxyFactory getInstance() {
-        return proxyFactory;
-    }
 
     /**
      * Jdk动态代理 ； 要求委托对象必须实现接口
@@ -49,12 +46,12 @@ public class ProxyFactory {
                     Object result = null;
                     try {
                         // 开启事务 （关闭事务的自动提交）
-                        TransactionManager.getInstance().beginTransaction();
+                        transactionManager.beginTransaction();
                         result = method.invoke(obj, args);
-                        TransactionManager.getInstance().commit();
+                        transactionManager.commit();
                     } catch (Exception e) {
                         //e.printStackTrace();
-                        TransactionManager.getInstance().rollback();
+                        transactionManager.rollback();
                         // 抛出异常便于上层servlet捕获
                         throw e;
                     }
@@ -76,12 +73,12 @@ public class ProxyFactory {
                         Object result = null;
                         try {
                             // 开启事务 （关闭事务的自动提交）
-                            TransactionManager.getInstance().beginTransaction();
+                            transactionManager.beginTransaction();
                             result = method.invoke(obj, args);
-                            TransactionManager.getInstance().commit();
+                            transactionManager.commit();
                         } catch (Exception e) {
                             //e.printStackTrace();
-                            TransactionManager.getInstance().rollback();
+                            transactionManager.rollback();
                             // 抛出异常便于上层servlet捕获
                             throw e.getCause();
                         }
