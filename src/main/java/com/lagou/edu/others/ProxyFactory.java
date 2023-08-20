@@ -9,8 +9,10 @@ package com.lagou.edu.others;
  since JDK 1.8
 */
 
+import com.lagou.edu.utils.TransactionManager;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
+import net.sf.cglib.proxy.MethodProxy;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -44,12 +46,18 @@ public class ProxyFactory {
         return Proxy.newProxyInstance(obj.getClass().getClassLoader(),
                 obj.getClass().getInterfaces(),
                 (Object proxy, Method method, Object[] args) -> {
-                    // 增强逻辑
-                    System.out.println("增强逻辑");
-                    // 调用原有业务逻辑
-                    Object result = method.invoke(obj, args);
-                    // 增强逻辑
-                    System.out.println("增强逻辑");
+                    Object result = null;
+                    try {
+                        // 开启事务 （关闭事务的自动提交）
+                        TransactionManager.getInstance().beginTransaction();
+                        result = method.invoke(obj, args);
+                        TransactionManager.getInstance().commit();
+                    } catch (Exception e) {
+                        //e.printStackTrace();
+                        TransactionManager.getInstance().rollback();
+                        // 抛出异常便于上层servlet捕获
+                        throw e;
+                    }
                     return result;
                 });
     }
@@ -62,14 +70,23 @@ public class ProxyFactory {
      */
     public Object getCglibProxy(Object obj) {
         return Enhancer.create(obj.getClass(),
-                (MethodInterceptor) (obj1, method, args, proxy) -> {
-                    // 增强逻辑
-                    System.out.println("增强逻辑");
-                    // 调用原有业务逻辑
-                    Object result = method.invoke(obj1, args);
-                    // 增强逻辑
-                    System.out.println("增强逻辑");
-                    return result;
+                new MethodInterceptor() {
+                    @Override
+                    public Object intercept(Object obj1, Method method, Object[] args, MethodProxy proxy) throws Throwable {
+                        Object result = null;
+                        try {
+                            // 开启事务 （关闭事务的自动提交）
+                            TransactionManager.getInstance().beginTransaction();
+                            result = method.invoke(obj, args);
+                            TransactionManager.getInstance().commit();
+                        } catch (Exception e) {
+                            //e.printStackTrace();
+                            TransactionManager.getInstance().rollback();
+                            // 抛出异常便于上层servlet捕获
+                            throw e.getCause();
+                        }
+                        return result;
+                    }
                 }
         );
     }

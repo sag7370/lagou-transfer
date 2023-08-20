@@ -4,7 +4,6 @@ package com.lagou.edu.service.impl;
 import com.lagou.edu.dao.AccountDao;
 import com.lagou.edu.pojo.Account;
 import com.lagou.edu.service.TransferService;
-import com.lagou.edu.utils.TransactionManager;
 
 /**
  * @author 应癫
@@ -20,22 +19,12 @@ public class TransferServiceImpl implements TransferService {
 
     @Override
     public void transfer(String fromCardNo, String toCardNo, int money) throws Exception {
-        try {
-            // 开启事务 （关闭事务的自动提交）
-            TransactionManager.getInstance().beginTransaction();
-            Account from = accountDao.queryAccountByCardNo(fromCardNo);
-            Account to = accountDao.queryAccountByCardNo(toCardNo);
-            from.setMoney(from.getMoney() - money);
-            to.setMoney(to.getMoney() + money);
-            accountDao.updateAccountByCardNo(from);
-            //int i = 1 /0;
-            accountDao.updateAccountByCardNo(to);
-            TransactionManager.getInstance().commit();
-        } catch (Exception e) {
-            e.printStackTrace();
-            TransactionManager.getInstance().rollback();
-            // 抛出异常便于上层servlet捕获
-            throw e;
-        }
+        Account from = accountDao.queryAccountByCardNo(fromCardNo);
+        Account to = accountDao.queryAccountByCardNo(toCardNo);
+        from.setMoney(from.getMoney() - money);
+        to.setMoney(to.getMoney() + money);
+        accountDao.updateAccountByCardNo(from);
+        //int i = 1 / 0;
+        accountDao.updateAccountByCardNo(to);
     }
 }
