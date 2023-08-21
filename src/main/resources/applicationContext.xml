@@ -17,8 +17,55 @@
                 总结：多例模式的bean对象，Spring框架只负责创建，不负责销毁
     -->
     <!--ID标识对象，class是类的全限定类名-->
-    <bean id="accountDao" class="com.lagou.edu.dao.impl.JdbcAccountDaoImpl"  init-method="init" destroy-method="destory">
-        <property name="ConnectionUtils" ref="connectionUtils"></property>
+    <bean id="accountDao" class="com.lagou.edu.dao.impl.JdbcAccountDaoImpl" init-method="init" destroy-method="destory">
+        <!--set注入使用property标签，
+        如果注入的是另外一个bean，那么使用ref属性
+        如果注入的是普通属性，使用value属性-->
+        <!--        <property name="ConnectionUtils" ref="connectionUtils"></property>-->
+        <!--        <property name="name" value="sag"></property>-->
+        <!--        <property name="sex" value="1"></property>-->
+        <!--        <property name="money" value="1000"></property>-->
+        <!--无参构造注入，name:按照参数名称注入，index按照参数索引位置注入-->
+        <!--        <constructor-arg index="0" ref="connectionUtils"/>-->
+        <!--        <constructor-arg index="1" value="sag"/>-->
+        <!--        <constructor-arg index="2" value="1"/>-->
+        <!--        <constructor-arg index="3" value="111111"/>-->
+        <constructor-arg name="connectionUtils" ref="connectionUtils"/>
+        <constructor-arg name="name" value="sag"/>
+        <constructor-arg name="sex" value="1"/>
+        <constructor-arg name="money" value="111111"/>
+        <property name="myArray">
+            <array>
+                <value>value1</value>
+                <value>value2</value>
+                <value>value3</value>
+            </array>
+        </property>
+        <property name="myMap">
+            <map>
+                <entry key="key1" value="value1"></entry>
+                <entry key="key2" value="value2"></entry>
+            </map>
+        </property>
+        <property name="mySet">
+            <set>
+                <value>value1</value>
+                <value>value2</value>
+            </set>
+        </property>
+        <property name="myProperties">
+            <props>
+                <prop key="prop1">value1</prop>
+                <prop key="prop2">value2</prop>
+            </props>
+        </property>
+        <property name="myList">
+            <list>
+                <value>1</value>
+                <value>2</value>
+                <value>3</value>
+            </list>
+        </property>
     </bean>
     <bean id="transferService" class="com.lagou.edu.service.impl.TransferServiceImpl">
         <!--set + name 之后锁定到传值的set方法了，通过反射技术可以调用该方法传入对应的值-->
