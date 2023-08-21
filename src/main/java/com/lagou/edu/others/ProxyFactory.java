@@ -13,6 +13,8 @@ import com.lagou.edu.utils.TransactionManager;
 import net.sf.cglib.proxy.Enhancer;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Method;
 import java.lang.reflect.Proxy;
@@ -24,13 +26,12 @@ import java.lang.reflect.Proxy;
  *
  * @author SAg <br/>
  */
+@Component("proxyFactory")
 public class ProxyFactory {
 
+    @Autowired
     private TransactionManager transactionManager;
 
-    public void setTransactionManager(TransactionManager transactionManager) {
-        this.transactionManager = transactionManager;
-    }
 
 
     /**

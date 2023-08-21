@@ -9,6 +9,9 @@ package com.lagou.edu.utils;
  since JDK 1.8
 */
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
 import java.sql.SQLException;
 
 /**
@@ -18,8 +21,10 @@ import java.sql.SQLException;
  *
  * @author SAg <br/>
  */
+@Component("transactionManager")
 public class TransactionManager {
 
+    @Autowired
     private ConnectionUtils connectionUtils;
 
     public void setConnectionUtils(ConnectionUtils connectionUtils) {

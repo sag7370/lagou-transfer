@@ -11,6 +11,10 @@ package com.lagou.edu.utils;
 
 
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+
+import javax.sql.DataSource;
 import java.sql.Connection;
 import java.sql.SQLException;
 
@@ -21,7 +25,15 @@ import java.sql.SQLException;
  *
  * @author SAg <br/>
  */
+@Component
 public class ConnectionUtils {
+
+    @Autowired
+    private DataSource dataSource;
+
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
     /**
      * 存储当前线程的sql链接
@@ -38,7 +50,7 @@ public class ConnectionUtils {
         Connection connection = connectionThreadLocal.get();
         if ( connection == null) {
             // 从连接池拿连接并绑定到当前线程
-            connection = DruidUtils.getInstance().getConnection();
+            connection = dataSource.getConnection();
             //绑定当前链接
             connectionThreadLocal.set(connection);
         }

@@ -4,7 +4,10 @@ package com.lagou.edu.dao.impl;
 import com.lagou.edu.dao.AccountDao;
 import com.lagou.edu.pojo.Account;
 import com.lagou.edu.utils.ConnectionUtils;
-import com.lagou.edu.utils.DruidUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -13,8 +16,12 @@ import java.sql.ResultSet;
 /**
  * @author 应癫
  */
+@Repository("accountDao")
 public class JdbcAccountDaoImpl implements AccountDao {
 
+    // 按照类型注入，如果按照类型无法唯一锁定对象，可以结合@Qualifier指定具体的ID
+    @Autowired
+    @Qualifier("connectionUtils")
     private ConnectionUtils connectionUtils;
 
     public void setConnectionUtils(ConnectionUtils connectionUtils) {
