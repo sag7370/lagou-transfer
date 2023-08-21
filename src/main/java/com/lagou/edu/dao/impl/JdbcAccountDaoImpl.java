@@ -21,6 +21,16 @@ public class JdbcAccountDaoImpl implements AccountDao {
         this.connectionUtils = connectionUtils;
     }
 
+    /**
+     * 初始化方法
+     */
+    public void init() {
+        System.out.println("初始化方法！");
+    }
+
+    public void destory() {
+        System.out.println("销毁方法！");
+    }
     @Override
     public Account queryAccountByCardNo(String cardNo) throws Exception { //从连接池获取连接
         //Connection con = DruidUtils.getInstance().getConnection();

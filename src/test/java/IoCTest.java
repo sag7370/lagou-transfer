@@ -52,4 +52,12 @@ public class IoCTest {
         ConnectionUtils connectionUtils = (ConnectionUtils) applicationContext.getBean("connectionUtils");
         System.out.println(connectionUtils);
     }
+
+    @Test
+    public void testInitAndDestroy() {
+        ClassPathXmlApplicationContext classPathXmlApplicationContext = new ClassPathXmlApplicationContext("classpath:applicationContext.xml");
+        AccountDao accountDao = (AccountDao) classPathXmlApplicationContext.getBean("accountDao");
+        System.out.println(accountDao);
+        classPathXmlApplicationContext.close();
+    }
 }
