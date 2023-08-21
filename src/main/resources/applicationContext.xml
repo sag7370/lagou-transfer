@@ -3,6 +3,19 @@
        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
        xsi:schemaLocation="http://www.springframework.org/schema/beans
        http://www.springframework.org/schema/beans/spring-beans.xsd">
+    <!--
+        scope：定义bean的作用范围
+            singleton: 单例，IoC容器中只有一个该类对象，默认是单例
+                对象出生：当创建容器是，对象就被创建了。
+                对象活着：只要容器在，对象就一直活着
+                对象死亡：当销毁容器时，对象就被销毁了。
+                总结：单例模式的bean对象生命周期与容器相同
+            prototype：原型（多例），每次使用该类的对象（getBean）,都返回一个新的对象
+                对象出生：当使用对象时，创建新的对象实例
+                对象活着：只要对象在使用中，就一直活着
+                对象死亡：当对象长时间不用时，被Java的垃圾回收期回收了。
+                总结：多例模式的bean对象，Spring框架只负责创建，不负责销毁
+    -->
     <!--ID标识对象，class是类的全限定类名-->
     <bean id="accountDao" class="com.lagou.edu.dao.impl.JdbcAccountDaoImpl">
         <property name="ConnectionUtils" ref="connectionUtils"></property>
@@ -12,9 +25,7 @@
         <property name="AccountDao" ref="accountDao"></property>
     </bean>
 
-    <bean id="connectionUtils" class="com.lagou.edu.utils.ConnectionUtils">
 
-    </bean>
     <!--事务管理器-->
     <bean id="transactionManager" class="com.lagou.edu.utils.TransactionManager">
         <property name="ConnectionUtils" ref="connectionUtils"></property>
@@ -23,4 +34,15 @@
     <bean id="proxyFactory" class="com.lagou.edu.others.ProxyFactory">
         <property name="TransactionManager" ref="transactionManager"></property>
     </bean>
+    <!--Spring IoC 实例化bean的三种方式-->
+    <!--方式1：使用无参构造器-->
+    <!--<bean id="connectionUtils" class="com.lagou.edu.utils.ConnectionUtils"></bean>-->
+    <!--另外两种方式是为了我们自己new的对象加入到Spring IoC的容器管理-->
+    <!--方式2：静态方法-->
+    <!--<bean id="connectionUtils" class="com.lagou.edu.factory.CreateBeanFactory" factory-method="getInstanceStatic"/>-->
+    <!--方式3：实例化方法-->
+    <bean id="createBeanFactory" class="com.lagou.edu.factory.CreateBeanFactory"></bean>
+    <bean id="connectionUtils" factory-bean="createBeanFactory" factory-method="getInstance"></bean>
+
+
 </beans>
